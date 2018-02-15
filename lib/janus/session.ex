@@ -130,9 +130,9 @@ defmodule Janus.Session do
               plugin_pid = session.handles[sender]
               if plugin_pid do
                 case data do
-                  %{janus: "event", plugindata: plugindata} ->
+                  %{janus: "event", plugindata: plugindata, transaction: transaction} ->
                     jsep = data[:jsep]
-                    Agent.get plugin_pid, &(GenEvent.notify(&1.event_manager, {:event, pid, plugin_pid, plugindata.data, jsep}))
+                    Agent.get plugin_pid, &(GenEvent.notify(&1.event_manager, {:event, pid, plugin_pid, plugindata.data, jsep, transaction}))
                   %{janus: "webrtcup"} -> Agent.get plugin_pid, &(GenEvent.notify(&1.event_manager, {:webrtcup, pid, plugin_pid}))
                   %{janus: "media", type: type, receiving: receiving} ->
                     Agent.get plugin_pid, &(GenEvent.notify(&1.event_manager, {:media, pid, plugin_pid, type, receiving}))
